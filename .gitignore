@@ -1,0 +1,13 @@
+# Dependencias (se reinstalan con npm install)
+node_modules/
+
+# Variables de entorno con contraseñas (no se suben a GitHub)
+.env
+
+# Compilados y caché de Angular
+dist/
+.angular/
+
+# Archivos del sistema / editor
+.DS_Store
+Thumbs.db

@@ -1,0 +1,8 @@
+.formulario-tarjeta { max-width: 760px; }
+.campo { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.1rem; flex: 1; }
+.campo label { font-weight: 600; font-size: 0.9rem; }
+.fila { display: flex; gap: 1rem; flex-wrap: wrap; }
+.fila .campo { min-width: 180px; }
+.error-campo { color: var(--color-peligro); font-size: 0.82rem; }
+.ayuda-campo { display: flex; justify-content: space-between; }
+.contador { color: var(--color-texto-suave); font-size: 0.8rem; }

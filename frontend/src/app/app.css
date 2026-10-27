@@ -1,0 +1,46 @@
+.encabezado {
+  background: var(--color-oscuro);
+  color: #fff;
+  margin-bottom: 2rem;
+}
+.encabezado-contenido {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+.marca small {
+  display: block;
+  font-weight: 400;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+.marca-icono { font-size: 1.6rem; }
+.navegacion {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.navegacion a:not(.btn) {
+  color: #cbd5e1;
+  text-decoration: none;
+  padding: 0.4rem 0.2rem;
+  border-bottom: 2px solid transparent;
+}
+.navegacion a:not(.btn).activo,
+.navegacion a:not(.btn):hover {
+  color: #fff;
+  border-bottom-color: var(--color-primario);
+}

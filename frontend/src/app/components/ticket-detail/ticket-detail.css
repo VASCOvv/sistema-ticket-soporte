@@ -1,0 +1,23 @@
+.detalle-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--color-borde);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.detalle-cabecera h1 { margin: 0.2rem 0 0; }
+.detalle-id { margin: 0; color: var(--color-texto-suave); font-weight: 600; }
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.detalle-datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+}
+.detalle-datos dt { font-size: 0.8rem; text-transform: uppercase; color: var(--color-texto-suave); }
+.detalle-datos dd { margin: 0.2rem 0 0; font-weight: 600; }
+h2 { font-size: 1rem; margin-bottom: 0.4rem; }
+.descripcion { white-space: pre-wrap; line-height: 1.6; margin-top: 0; }

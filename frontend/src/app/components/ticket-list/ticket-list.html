@@ -1,0 +1,76 @@
+<section class="cabecera-seccion">
+  <div>
+    <h1>Tickets de soporte</h1>
+    <p class="subtitulo">Solicitudes registradas en el sistema</p>
+  </div>
+  <div class="filtro">
+    <label for="filtroEstado">Filtrar por estado</label>
+    <select id="filtroEstado" [value]="filtroEstado()" (change)="cambiarFiltro($any($event.target).value)">
+      <option value="">Todos</option>
+      @for (estado of estados; track estado) {
+        <option [value]="estado">{{ estado }}</option>
+      }
+    </select>
+  </div>
+</section>
+
+@if (mensaje()) {
+  <div class="alerta alerta-exito">
+    <span>✔ {{ mensaje() }}</span>
+    <button class="cerrar" (click)="mensaje.set(null)" aria-label="Cerrar">×</button>
+  </div>
+}
+
+@if (error()) {
+  <div class="alerta alerta-error">
+    <span>⚠ {{ error() }}</span>
+    <button class="btn btn-secundario btn-pequeno" (click)="cargarTickets()">Reintentar</button>
+  </div>
+}
+
+@if (cargando()) {
+  <p class="estado-vacio">Cargando tickets...</p>
+} @else if (!error()) {
+  @if (ticketsFiltrados().length === 0) {
+    <div class="estado-vacio">
+      <p>No hay tickets para mostrar.</p>
+      <a routerLink="/tickets/nuevo" class="btn btn-primario">Registrar el primer ticket</a>
+    </div>
+  } @else {
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Asunto</th>
+            <th>Solicitante</th>
+            <th>Categoría</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+            <th>Registro</th>
+            <th class="col-acciones">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ticket of ticketsFiltrados(); track ticket.id) {
+            <tr>
+              <td class="col-id">{{ ticket.id }}</td>
+              <td><a [routerLink]="['/tickets', ticket.id]" class="enlace-asunto">{{ ticket.asunto }}</a></td>
+              <td>{{ ticket.solicitante }}</td>
+              <td>{{ ticket.categoria }}</td>
+              <td><span class="badge" [class]="'badge ' + clasePrioridad[ticket.prioridad]">{{ ticket.prioridad }}</span></td>
+              <td><span class="badge" [class]="'badge ' + claseEstado[ticket.estado]">{{ ticket.estado }}</span></td>
+              <td class="col-fecha">{{ ticket.fechaRegistro | date: 'dd-MM-yyyy HH:mm' }}</td>
+              <td class="col-acciones">
+                <a [routerLink]="['/tickets', ticket.id]" class="btn btn-secundario btn-pequeno">Ver</a>
+                <a [routerLink]="['/tickets', ticket.id, 'editar']" class="btn btn-secundario btn-pequeno">Editar</a>
+                <button class="btn btn-peligro btn-pequeno" (click)="eliminar(ticket)">Eliminar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="total">Mostrando {{ ticketsFiltrados().length }} de {{ tickets().length }} tickets</p>
+  }
+}

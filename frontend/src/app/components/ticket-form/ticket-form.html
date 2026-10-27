@@ -1,0 +1,97 @@
+<a routerLink="/tickets" class="volver">← Volver al listado</a>
+
+<article class="tarjeta formulario-tarjeta">
+  <h1>{{ idTicket() ? 'Editar ticket #' + idTicket() : 'Registrar nuevo ticket' }}</h1>
+  <p class="subtitulo">Los campos marcados con * son obligatorios.</p>
+
+  @if (error()) {
+    <div class="alerta alerta-error"><span>⚠ {{ error() }}</span></div>
+  }
+
+  @if (cargando()) {
+    <p class="estado-vacio">Cargando ticket...</p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+      <div class="campo">
+        <label for="asunto">Asunto *</label>
+        <input id="asunto" type="text" formControlName="asunto" placeholder="Ej: No funciona la impresora del piso 2"
+               [class.invalido]="campoInvalido('asunto')" />
+        @if (campoInvalido('asunto')) {
+          <small class="error-campo">
+            @if (tieneError('asunto', 'required')) { El asunto es obligatorio. }
+            @else if (tieneError('asunto', 'soloEspacios')) { El asunto no puede contener solo espacios. }
+            @else if (tieneError('asunto', 'minlength')) { El asunto debe tener al menos 5 caracteres. }
+            @else if (tieneError('asunto', 'maxlength')) { El asunto no puede superar los 100 caracteres. }
+          </small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="solicitante">Solicitante *</label>
+        <input id="solicitante" type="text" formControlName="solicitante" placeholder="Nombre de quien solicita soporte"
+               [class.invalido]="campoInvalido('solicitante')" />
+        @if (campoInvalido('solicitante')) {
+          <small class="error-campo">
+            @if (tieneError('solicitante', 'required')) { El solicitante es obligatorio. }
+            @else if (tieneError('solicitante', 'soloEspacios')) { El solicitante no puede contener solo espacios. }
+            @else if (tieneError('solicitante', 'minlength')) { El nombre debe tener al menos 3 caracteres. }
+            @else if (tieneError('solicitante', 'maxlength')) { El nombre no puede superar los 80 caracteres. }
+          </small>
+        }
+      </div>
+
+      <div class="fila">
+        <div class="campo">
+          <label for="categoria">Categoría *</label>
+          <select id="categoria" formControlName="categoria" [class.invalido]="campoInvalido('categoria')">
+            <option value="" disabled>Selecciona una categoría</option>
+            @for (c of categorias; track c) { <option [value]="c">{{ c }}</option> }
+          </select>
+          @if (campoInvalido('categoria')) { <small class="error-campo">Selecciona una categoría.</small> }
+        </div>
+
+        <div class="campo">
+          <label for="prioridad">Prioridad *</label>
+          <select id="prioridad" formControlName="prioridad" [class.invalido]="campoInvalido('prioridad')">
+            <option value="" disabled>Selecciona una prioridad</option>
+            @for (p of prioridades; track p) { <option [value]="p">{{ p }}</option> }
+          </select>
+          @if (campoInvalido('prioridad')) { <small class="error-campo">Selecciona una prioridad.</small> }
+        </div>
+
+        <div class="campo">
+          <label for="estado">Estado *</label>
+          <select id="estado" formControlName="estado" [class.invalido]="campoInvalido('estado')">
+            @for (e of estados; track e) { <option [value]="e">{{ e }}</option> }
+          </select>
+          @if (campoInvalido('estado')) { <small class="error-campo">Selecciona un estado.</small> }
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="descripcion">Descripción del problema *</label>
+        <textarea id="descripcion" rows="5" formControlName="descripcion"
+                  placeholder="Describe el problema con el mayor detalle posible"
+                  [class.invalido]="campoInvalido('descripcion')"></textarea>
+        <div class="ayuda-campo">
+          @if (campoInvalido('descripcion')) {
+            <small class="error-campo">
+              @if (tieneError('descripcion', 'required')) { La descripción es obligatoria. }
+              @else if (tieneError('descripcion', 'soloEspacios')) { La descripción no puede contener solo espacios. }
+              @else if (tieneError('descripcion', 'minlength')) { La descripción debe tener al menos 10 caracteres. }
+              @else if (tieneError('descripcion', 'maxlength')) { La descripción no puede superar los 1000 caracteres. }
+            </small>
+          } @else { <span></span> }
+          <small class="contador">{{ form.controls.descripcion.value.length }}/1000</small>
+        </div>
+      </div>
+
+      <div class="acciones">
+        <a routerLink="/tickets" class="btn btn-secundario">Cancelar</a>
+        <button type="submit" class="btn btn-primario" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando...' : (idTicket() ? 'Guardar cambios' : 'Registrar ticket') }}
+        </button>
+      </div>
+    </form>
+  }
+</article>

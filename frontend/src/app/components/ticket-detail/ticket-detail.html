@@ -1,0 +1,36 @@
+<a routerLink="/tickets" class="volver">← Volver al listado</a>
+
+@if (error()) {
+  <div class="alerta alerta-error"><span>⚠ {{ error() }}</span></div>
+}
+
+@if (cargando()) {
+  <p class="estado-vacio">Cargando ticket...</p>
+} @else if (ticket(); as t) {
+  <article class="tarjeta">
+    <header class="detalle-cabecera">
+      <div>
+        <p class="detalle-id">Ticket #{{ t.id }}</p>
+        <h1>{{ t.asunto }}</h1>
+      </div>
+      <div class="badges">
+        <span [class]="'badge ' + clasePrioridad[t.prioridad]">Prioridad: {{ t.prioridad }}</span>
+        <span [class]="'badge ' + claseEstado[t.estado]">{{ t.estado }}</span>
+      </div>
+    </header>
+
+    <dl class="detalle-datos">
+      <div><dt>Solicitante</dt><dd>{{ t.solicitante }}</dd></div>
+      <div><dt>Categoría</dt><dd>{{ t.categoria }}</dd></div>
+      <div><dt>Fecha de registro</dt><dd>{{ t.fechaRegistro | date: 'dd-MM-yyyy HH:mm' }}</dd></div>
+    </dl>
+
+    <h2>Descripción del problema</h2>
+    <p class="descripcion">{{ t.descripcion }}</p>
+
+    <footer class="acciones">
+      <a [routerLink]="['/tickets', t.id, 'editar']" class="btn btn-primario">Editar</a>
+      <button class="btn btn-peligro" (click)="eliminar(t)">Eliminar</button>
+    </footer>
+  </article>
+}

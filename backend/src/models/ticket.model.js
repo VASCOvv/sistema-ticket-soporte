@@ -1,33 +1,41 @@
+const pool = require('../config/db');
 
-let tickets = [];
-let siguienteId = 1;
+const COLUMNAS = `id, asunto, solicitante, descripcion, categoria, prioridad, estado,
+  DATE_FORMAT(fecha_registro, '%Y-%m-%dT%H:%i:%s') AS fechaRegistro`;
 
 async function obtenerTodos() {
-  return [...tickets].sort((a, b) => b.id - a.id);
+  const [filas] = await pool.execute(`SELECT ${COLUMNAS} FROM tickets ORDER BY id DESC`);
+  return filas;
 }
 
 async function obtenerPorId(id) {
-  return tickets.find((t) => t.id === id) ?? null;
+  const [filas] = await pool.execute(`SELECT ${COLUMNAS} FROM tickets WHERE id = ?`, [id]);
+  return filas[0] ?? null;
 }
 
 async function crear(datos) {
-  const nuevo = { id: siguienteId++, ...datos, fechaRegistro: new Date().toISOString() };
-  tickets.push(nuevo);
-  return nuevo;
+  const [resultado] = await pool.execute(
+    `INSERT INTO tickets (asunto, solicitante, descripcion, categoria, prioridad, estado)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [datos.asunto, datos.solicitante, datos.descripcion, datos.categoria, datos.prioridad, datos.estado]
+  );
+  return obtenerPorId(resultado.insertId);
 }
 
 async function actualizar(id, datos) {
-  const indice = tickets.findIndex((t) => t.id === id);
-  if (indice === -1) return null;
-  tickets[indice] = { ...tickets[indice], ...datos };
-  return tickets[indice];
+  const [resultado] = await pool.execute(
+    `UPDATE tickets
+     SET asunto = ?, solicitante = ?, descripcion = ?, categoria = ?, prioridad = ?, estado = ?
+     WHERE id = ?`,
+    [datos.asunto, datos.solicitante, datos.descripcion, datos.categoria, datos.prioridad, datos.estado, id]
+  );
+  if (resultado.affectedRows === 0) return null;
+  return obtenerPorId(id);
 }
 
 async function eliminar(id) {
-  const indice = tickets.findIndex((t) => t.id === id);
-  if (indice === -1) return false;
-  tickets.splice(indice, 1);
-  return true;
+  const [resultado] = await pool.execute('DELETE FROM tickets WHERE id = ?', [id]);
+  return resultado.affectedRows > 0;
 }
 
 module.exports = { obtenerTodos, obtenerPorId, crear, actualizar, eliminar };
